@@ -1,8 +1,7 @@
 #!/bin/bash
 DAY=$(date +%d)
 YEAR=$(date +%Y)
-AOC_SESSION_FILE="${PWD}/.aoc_session"
-
+AOC_SESSION_FILE="/home/ghassemiramtin/Projects/AdventOfCode/.aoc_session"
 # Fetch input arguments --day and --year
 while [[ $# -gt 0 ]]; do
 	case $1 in
