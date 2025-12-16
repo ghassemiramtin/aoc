@@ -1,3 +1,12 @@
+# Use this bash script to fetch the input.txt for Advent of Code.
+# The day and year default to the current day and year, but can be
+# overwritten using the --day and --year flags.
+# For example: ./fetch_input.sh --day 1 --year 2025
+# As of 2025, only days 1-12 are valid. An error is thrown
+# only when the request fails as bounds checking is not done
+# on day and year parameters. To use this script, update the AOC_SESSION_FILE
+# path and add your session cookie there.
+
 #!/bin/bash
 DAY=$(date +%d)
 YEAR=$(date +%Y)
