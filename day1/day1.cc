@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "../file_utils/file_parser.cc"
+
 // Parses the line and returns direction and magnitude via parameters
 void parse_line(std::string line, char* direction, int* magnitude) {
 	*direction = line[0];
@@ -44,20 +46,15 @@ int main(int argc, char* argv[])
 	std::string filename = argv[1];
 	std::string part = argv[2];
 
-	std::ifstream input_file(filename);
+	FileParser input_file(filename);
 
-	if (!input_file) {
-		std::cerr << "Could not open " << filename << std::endl;
-		return 1;
-	}
 
-	std::string line;
 	int running_total = 50;
 	int result = 0;
 	char direction;
 	int magnitude;
-	while (std::getline(input_file, line)) {
-		parse_line(line, &direction, &magnitude);
+	while (input_file.HasNextLine()) {
+		parse_line(input_file.GetLine(), &direction, &magnitude);
 		if (part == "b") {
 			result += passes_zero(running_total, std::abs(magnitude), direction); 
 		}
