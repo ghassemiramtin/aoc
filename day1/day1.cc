@@ -5,13 +5,16 @@
 
 #include "../file_utils/file_parser.cc"
 
-// Parses the line and returns direction and magnitude via parameters
+namespace {
+
+// Parses the line and returns direction and magnitude via parameters.
 void parse_line(std::string line, char* direction, int* magnitude) {
 	*direction = line[0];
 	int num = std::stoi(line.substr(1));
 	*magnitude = *direction == 'L' ? -num : num;
 }
 
+// Distance from zero taking into account direction.
 int dist_to_zero(int number, char direction) {
 	switch (direction) {
 		case 'L':
@@ -23,6 +26,8 @@ int dist_to_zero(int number, char direction) {
 	}
 }
 
+// Counts the number of times you pass zero starting at prev_value
+// and moving in a particular direction a certain magnitude, wrapping at 100.
 int passes_zero(int prev_value, int magnitude, char direction) {
 	int distance = dist_to_zero(prev_value, direction);
 	if (distance == 0) {
@@ -35,6 +40,7 @@ int passes_zero(int prev_value, int magnitude, char direction) {
 
 	return 1 + magnitude / 100;
 }
+}  // namepsace
 
 int main(int argc, char* argv[])
 {
