@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../file_utils/file_parser.cc"
+#include "../../file_utils/file_parser.cc"
 
 namespace {
 
