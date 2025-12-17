@@ -8,7 +8,7 @@ class FileParser {
 		FileParser(std::string filename, char delimiter) : file_(filename), delimiter_(delimiter) {}
 		~FileParser() = default;
 		bool HasNextLine();
-		std::string GetLine();
+		std::string GetLine() const;
 	private:
 		std::ifstream file_;
 		std::string line_;
@@ -22,7 +22,7 @@ bool FileParser::HasNextLine() {
 	return false;
 }
 
-std::string FileParser::GetLine() {
+std::string FileParser::GetLine() const {
 	return line_;
 }
 
