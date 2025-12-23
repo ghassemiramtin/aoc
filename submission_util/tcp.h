@@ -80,6 +80,30 @@ struct HttpResponse {
 	{
 		return headers.count(key) ? headers[key] : "";
 	}
+	std::string ToString() const {
+        	std::stringstream ss;
+
+        	// 1. Status Line: HTTP/1.1 <Code> <Message>\r\n
+        	ss << "HTTP/1.1 " << status_code << " " << status_message << "\r\n";
+
+        	// 2. Headers: Key: Value\r\n
+        	for (const auto& [key, value] : headers) {
+            	ss << key << ": " << value << "\r\n";
+        	}
+
+        	// 3. Mandatory Content-Length (if body exists and not already set)
+        	if (!body.empty() && headers.find("Content-Length") == headers.end()) {
+            	ss << "Content-Length: " << body.size() << "\r\n";
+        	}
+
+        	// 4. Blank line to separate headers from body
+        	ss << "\r\n";
+
+        	// 5. Body
+        	ss << body;
+
+        	return ss.str();
+    }
 };
 
 class TcpClient {

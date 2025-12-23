@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 
 #include "../file_utils/file_parser.cc"
+#include "./tcp.cc"
 
 #ifndef SUBMIT_H
 #define SUBMIT_H
@@ -22,7 +23,7 @@ class Submission {
 			}
 		~Submission() = default;
 
-		HttpResponse Submit(std::string answer)
+		std::string Submit(std::string answer)
 		{
 			// Construct the Advent of Code request
 			auto req = network::HttpRequest()
@@ -45,9 +46,9 @@ class Submission {
     				// Finally, the data from --data-raw
     				.SetBody("level=1&answer=17043")
 				.ToString();
-			clinet_.Send(req);
+			client_.Send(req);
 
-			return client_.ReceiveResponse();
+			return client_.ReceiveResponse().ToString();
 		}
 	private:
 		std::string hostname_ = "adventofcode.com";
