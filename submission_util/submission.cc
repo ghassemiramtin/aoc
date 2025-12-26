@@ -37,13 +37,10 @@ class Submission {
     				.SetHeader("Origin", "https://adventofcode.com")
     				.SetHeader("Referer", "https://adventofcode.com/2025/day/3")
     				.SetHeader("User-Agent", "Mozilla/5.0 (X11; CrOS x86_64 14541.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36")
-    				// The -b flag in curl translates to the 'Cookie' header
     				.SetHeader("Cookie", aoc_session_)
-    				// These are the "Sec-" headers browser-based curl commands often include
     				.SetHeader("Sec-Fetch-Dest", "document")
     				.SetHeader("Sec-Fetch-Mode", "navigate")
     				.SetHeader("Sec-Fetch-Site", "same-origin")
-    				// Finally, the data from --data-raw
     				.SetBody("level=1&answer=17043")
 				.ToString();
 			client_.Send(req);
