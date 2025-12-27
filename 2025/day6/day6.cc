@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -6,64 +8,108 @@
 
 namespace
 {
-	uint64_t Add(const std::vector<std::string>& input)
-	{
-		uint64_t total = 0;
-		for (int i = 0; i < input.size() - 1; ++i)
-		{
-			total += std::stoull(input[i]);
-		}
-		return total;
-	}
-	
-	uint64_t Multiply(const std::vector<std::string>& input)
-	{
-		uint64_t total = 1;
-		for (int i = 0; i < input.size() - 1; ++i)
-		{
-			total *= std::stoull(input[i]);
-		}
-		return total;
-	}
+	class Accumulator
+	{ 
+		public:
+			Accumulator() = default;
+			~Accumulator() = default;
+			
+			uint64_t Accumulate(char op)
+			{
+				switch (op)
+				{
+					case '+':
+						return Add();
+					case '*':
+						return Multiply();
+					default:
+						return 0;
+				}
+			}
+			
+			void Insert(std::string value)
+			{
+				values_.push_back(value);
+			}
 
-	uint64_t Reduce(const std::vector<std::string>& input)
+			void Clear()
+			{
+				values_.clear();
+			}
+
+			bool HasValues()
+			{
+				return !values_.empty();
+			}
+		private:
+			std::vector<std::string> values_;
+			uint64_t Add()
+			{
+				uint64_t total = 0;
+				for (int i = 0; i < values_.size(); ++i)
+				{
+					total += std::stoull(values_[i]);
+				}
+				return total;
+			}
+
+			uint64_t Multiply()
+			{
+				uint64_t total = 1;
+				for (int i = 0; i < values_.size(); ++i)
+				{
+					total *= std::stoull(values_[i]);
+				}
+				return total;
+			}
+	};
+	bool IsOperator(char potential_op)
 	{
-		char operation = input.back()[0];
-		switch (operation)
-		{
-			case '+':
-				return Add(input);
-			case '*':
-				return Multiply(input);
-			default:
-				return 0;
-		}
+		return potential_op == '*' || potential_op == '+';
 	}
 }  // namespace
 
 int main()
 {
 	FileParser file_input("./input6-2025.txt");
-	std::vector<std::vector<std::string>> columns;
+	std::vector<std::string> grid;
 
 	while (file_input.HasNextLine())
 	{
-		std::string line = file_input.GetLine();
-		std::stringstream ss(line);
-		std::string token;
-		int index = 0;
+		grid.push_back(file_input.GetLine());
+	}
 
-		while (ss >> token)
+	uint64_t total = 0;
+	Accumulator acc;
+	char op;
+	for (int c = grid[0].size() - 1; c >= 0; --c)
+	{
+		std::string column = "";
+		for (int r = 0; r < grid.size(); ++r)
 		{
-			if (index >= columns.size()) columns.push_back({});
-			columns[index].push_back(token);
-			index++;
+			if (std::isspace(grid[r][c])) continue;
+			if (IsOperator(grid[r][c]))
+			{
+				op = grid[r][c];
+				continue;
+			}
+			column += grid[r][c];
+		}
+		// This means a column of all spaces, problem i is complete.
+		if (column.empty())
+		{
+			total += acc.Accumulate(op);
+			acc.Clear();
+		}
+		else
+		{
+			acc.Insert(column);
 		}
 	}
-	uint64_t total = 0;
-	for (const auto& col : columns)
+	if (acc.HasValues())
 	{
-		total += Reduce(col);
+		total += acc.Accumulate(op);
 	}
-	std::cout << "Total: " << total << std::endl;
+
+	std::cout << "Total is: " << total << std::endl;
 }
